@@ -12,7 +12,6 @@ import {
 } from "../components/ui";
 import { useMagnetic } from "../hooks/useMagnetic";
 import { useCompanies } from "../features/experiences/hooks/useCompanies";
-import { formatExperiencePeriod } from "../features/experiences/utils/formatExperiencePeriod";
 
 const projects = [
   {
@@ -167,27 +166,13 @@ export default function HomePage() {
                 />
 
                 <DividedList className="relative divide-y-0 border-y-0">
-                  {companies.map((company) =>
-                    company.experiences
-                      .slice()
-                      .sort((a, b) => a.displayOrder - b.displayOrder)
-                      .map((experience) => (
-                        <ExperienceCard
-                          key={experience.id}
-                          company={company.name}
-                          period={formatExperiencePeriod(
-                            experience.startDate,
-                            experience.endDate,
-                            experience.current,
-                          )}
-                          role={experience.role}
-                          description={experience.description}
-                          employmentType={experience.employmentType}
-                          location={experience.location}
-                          technologies={experience.technologies}
-                        />
-                      )),
-                  )}
+                  {companies.map((company) => (
+                    <ExperienceCard
+                      key={company.id}
+                      company={company.name}
+                      experiences={company.experiences}
+                    />
+                  ))}
                 </DividedList>
               </>
             )}

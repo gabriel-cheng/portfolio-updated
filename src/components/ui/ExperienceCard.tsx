@@ -1,15 +1,24 @@
 import type { HTMLAttributes } from "react";
 import { Badge } from "./Badge";
 import { cn } from "./utils";
+import { formatExperiencePeriod } from "../../features/experiences/utils/formatExperiencePeriod";
 
-export interface ExperienceCardProps extends HTMLAttributes<HTMLElement> {
-  company: string;
-  period: string;
+interface Experience {
+  id: string;
   role: string;
   description: string;
   employmentType?: string;
   location?: string | null;
   technologies?: string[];
+  startDate: string;
+  endDate: string | null;
+  current: boolean;
+  displayOrder: number;
+}
+
+export interface ExperienceCardProps extends HTMLAttributes<HTMLElement> {
+  company: string;
+  experiences: Experience[];
   className?: string;
 }
 
@@ -25,21 +34,37 @@ const employmentLabels: Record<string, string> = {
 
 export function ExperienceCard({
   company,
-  period,
-  role,
-  description,
-  employmentType,
-  location,
-  technologies = [],
+  experiences,
   className,
   ...props
 }: ExperienceCardProps) {
-  const descriptionLines = description
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const orderedExperiences = experiences
+    .slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 
-  const isBulletList = descriptionLines.some((line) => line.startsWith("- "));
+  const periods = orderedExperiences.map((experience) =>
+    formatExperiencePeriod(
+      experience.startDate,
+      experience.endDate,
+      experience.current,
+    ),
+  );
+
+  const companyPeriod =
+    periods.length > 0
+      ? periods.length === 1
+        ? periods[0]
+        : `${orderedExperiences[0].startDate.slice(0, 4)} — ${
+            orderedExperiences.some((experience) => experience.current)
+              ? "Atual"
+              : (orderedExperiences
+                  .map((experience) => experience.endDate)
+                  .filter((date): date is string => date !== null)
+                  .sort()
+                  .at(-1)
+                  ?.slice(0, 4) ?? "")
+          }`
+      : "";
 
   return (
     <article
@@ -54,58 +79,98 @@ export function ExperienceCard({
         <h3 className="font-display text-lg font-medium">{company}</h3>
 
         <span className="mt-2 block font-mono text-xs text-[var(--color-muted)]">
-          {period}
+          {companyPeriod}
         </span>
       </div>
 
-      {/* Marcador da timeline */}
+      {/* Um único marcador por empresa */}
       <div className="relative hidden justify-center sm:flex">
         <span className="relative z-10 mt-1 size-3 rounded-full border-2 border-[var(--color-accent)] bg-[var(--color-background)]" />
       </div>
 
-      {/* Conteúdo da experiência */}
+      {/* Experiências da empresa */}
       <div className="sm:pl-2">
-        <h4 className="font-display text-xl font-medium">{role}</h4>
+        {orderedExperiences.map((experience, index) => {
+          const descriptionLines = experience.description
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter(Boolean);
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-[var(--color-muted)]">
-          {employmentType && (
-            <span>{employmentLabels[employmentType] ?? employmentType}</span>
-          )}
+          const isBulletList = descriptionLines.some((line) =>
+            line.startsWith("- "),
+          );
 
-          {employmentType && location && <span aria-hidden="true">/</span>}
+          return (
+            <div
+              key={experience.id}
+              className={cn(
+                index > 0 && "mt-10 border-t border-[var(--color-border)] pt-8",
+              )}
+            >
+              <h4 className="font-display text-xl font-medium">
+                {experience.role}
+              </h4>
 
-          {location && <span>{location}</span>}
-        </div>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-[var(--color-muted)]">
+                <span>
+                  {formatExperiencePeriod(
+                    experience.startDate,
+                    experience.endDate,
+                    experience.current,
+                  )}
+                </span>
 
-        <div className="mt-5 max-w-2xl">
-          {isBulletList ? (
-            <ul className="space-y-3">
-              {descriptionLines.map((line, index) => (
-                <li
-                  key={index}
-                  className="flex gap-3 text-sm leading-7 text-[var(--color-muted)]"
-                >
-                  <span className="mt-[11px] size-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
-                  <span>{line.replace(/^-\s*/, "")}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm leading-7 text-[var(--color-muted)]">
-              {description}
-            </p>
-          )}
-        </div>
+                {experience.employmentType && (
+                  <>
+                    <span aria-hidden="true">/</span>
+                    <span>
+                      {employmentLabels[experience.employmentType] ??
+                        experience.employmentType}
+                    </span>
+                  </>
+                )}
 
-        {technologies.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-2">
-            {technologies.map((technology) => (
-              <Badge key={technology} variant="subtle">
-                {technology.replace(/\.$/, "")}
-              </Badge>
-            ))}
-          </div>
-        )}
+                {experience.location && (
+                  <>
+                    <span aria-hidden="true">/</span>
+                    <span>{experience.location}</span>
+                  </>
+                )}
+              </div>
+
+              <div className="mt-5 max-w-2xl">
+                {isBulletList ? (
+                  <ul className="space-y-3">
+                    {descriptionLines.map((line, lineIndex) => (
+                      <li
+                        key={lineIndex}
+                        className="flex gap-3 text-sm leading-7 text-[var(--color-muted)]"
+                      >
+                        <span className="mt-[11px] size-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
+                        <span>{line.replace(/^-\s*/, "")}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm leading-7 text-[var(--color-muted)]">
+                    {experience.description}
+                  </p>
+                )}
+              </div>
+
+              {experience.technologies &&
+                experience.technologies.length > 0 && (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {experience.technologies.map((technology) => (
+                      <Badge key={technology} variant="subtle">
+                        {technology.replace(/\.$/, "")}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+            </div>
+          );
+        })}
       </div>
     </article>
   );
