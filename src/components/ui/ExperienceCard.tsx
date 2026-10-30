@@ -3,9 +3,9 @@ import { Badge } from "./Badge";
 import { cn } from "./utils";
 
 export interface ExperienceCardProps extends HTMLAttributes<HTMLElement> {
+  company: string;
   period: string;
   role: string;
-  company: string;
   description: string;
   employmentType?: string;
   location?: string | null;
@@ -24,9 +24,9 @@ const employmentLabels: Record<string, string> = {
 };
 
 export function ExperienceCard({
+  company,
   period,
   role,
-  company,
   description,
   employmentType,
   location,
@@ -44,7 +44,7 @@ export function ExperienceCard({
   return (
     <article
       className={cn(
-        "relative grid min-h-[220px] gap-4 py-10 sm:grid-cols-[180px_24px_minmax(0,1fr)] sm:gap-6",
+        "relative grid gap-4 py-10 sm:grid-cols-[180px_24px_minmax(0,1fr)] sm:gap-6",
         className,
       )}
       {...props}

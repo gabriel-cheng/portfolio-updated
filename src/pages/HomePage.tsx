@@ -11,7 +11,7 @@ import {
   SectionHeading,
 } from "../components/ui";
 import { useMagnetic } from "../hooks/useMagnetic";
-import { useExperiences } from "../features/experiences/hooks/useExperiences";
+import { useCompanies } from "../features/experiences/hooks/useCompanies";
 import { formatExperiencePeriod } from "../features/experiences/utils/formatExperiencePeriod";
 
 const projects = [
@@ -33,12 +33,7 @@ const projects = [
 
 export default function HomePage() {
   const { elementRef, handleMouseMove, handleMouseLeave } = useMagnetic(20);
-  const {
-    data: experiences = [],
-    isLoading,
-    isError,
-    refetch,
-  } = useExperiences();
+  const { data: companies = [], isLoading, isError, refetch } = useCompanies();
 
   return (
     <Layout>
@@ -131,67 +126,46 @@ export default function HomePage() {
 
       {/* Experiência */}
 
-      {/* Experiência */}
       <Section id="experiencia" borderTop>
         <Container className="py-24">
           <SectionHeading
-            eyebrow="02 / TRAJETÓRIA"
+            eyebrow=">_ 02 / TRAJETÓRIA"
             title="Experiência profissional"
+            description="Minha trajetória profissional e os desafios que fizeram parte dela."
+            layout="stacked"
           />
 
-          {isLoading ? (
-            <p className="py-12 text-sm text-[var(--color-muted)]">
-              Carregando experiências...
-            </p>
-          ) : isError ? (
-            <div className="py-12">
-              <p className="text-sm text-[var(--color-muted)]">
-                Não foi possível carregar as experiências profissionais.
-              </p>
+          <div className="relative">
+            {/* Linha contínua da timeline */}
+            <div
+              aria-hidden="true"
+              className="absolute bottom-0 left-[216px] top-0 hidden w-px bg-[var(--color-border)] sm:block"
+            />
 
-              <Button
-                variant="underline"
-                onClick={() => void refetch()}
-                className="mt-4"
-              >
-                Tentar novamente
-              </Button>
-            </div>
-          ) : experiences.length === 0 ? (
-            <p className="py-12 text-sm text-[var(--color-muted)]">
-              Nenhuma experiência profissional cadastrada.
-            </p>
-          ) : (
-            <div className="relative">
-              {/* Linha única da timeline */}
-              <div
-                aria-hidden="true"
-                className="absolute bottom-0 left-[216px] top-0 hidden w-px bg-[var(--color-border)] sm:block"
-              />
-
-              <DividedList className="relative divide-y-0 border-y-0">
-                {experiences
+            <DividedList className="relative divide-y-0 border-y-0">
+              {companies.map((company) =>
+                company.experiences
                   .slice()
                   .sort((a, b) => a.displayOrder - b.displayOrder)
                   .map((experience) => (
                     <ExperienceCard
                       key={experience.id}
+                      company={company.name}
                       period={formatExperiencePeriod(
                         experience.startDate,
                         experience.endDate,
                         experience.current,
                       )}
                       role={experience.role}
-                      company={experience.company}
                       description={experience.description}
                       employmentType={experience.employmentType}
                       location={experience.location}
                       technologies={experience.technologies}
                     />
-                  ))}
-              </DividedList>
-            </div>
-          )}
+                  )),
+              )}
+            </DividedList>
+          </div>
         </Container>
       </Section>
 
