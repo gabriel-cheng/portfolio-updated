@@ -10,6 +10,9 @@ import {
   Section,
   SectionHeading,
 } from "../components/ui";
+import { useMagnetic } from "../hooks/useMagnetic";
+import { useExperiences } from "../features/experiences/hooks/useExperiences";
+import { formatExperiencePeriod } from "../features/experiences/utils/formatExperiencePeriod";
 
 const projects = [
   {
@@ -28,62 +31,73 @@ const projects = [
   },
 ];
 
-const experiences = [
-  {
-    period: "2025 — 2026",
-    role: "Desenvolvedor Full-Stack",
-    company: "Codes",
-    description:
-      "Desenvolvimento e manutenção de aplicações web, APIs e integrações.",
-  },
-  {
-    period: "2023 — 2024",
-    role: "Analista de TI",
-    company: "Citybens",
-    description:
-      "Atuação com suporte à infraestrutura, sistemas internos e integrações.",
-  },
-];
-
 export default function HomePage() {
+  const { elementRef, handleMouseMove, handleMouseLeave } = useMagnetic(20);
+  const {
+    data: experiences = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useExperiences();
+
   return (
     <Layout>
       <Section
         id="inicio"
         scrollMargin={false}
-        className="relative mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-6 pb-32 pt-32"
+        className="relative mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-6 pb-28 pt-32"
       >
-        <Badge variant="subtle">
-          <span className="font-mono text-[var(--color-accent)]">&gt;_</span>{" "}
-          DESENVOLVEDOR DE SOFTWARE
-        </Badge>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+          {/* Apresentação */}
+          <div>
+            <Badge variant="subtle">
+              <span className="font-mono text-[var(--color-accent)]">
+                &gt;_
+              </span>{" "}
+              Desenvolvedor Full-Stack
+            </Badge>
 
-        <h1 className="mt-8 max-w-4xl font-display text-5xl font-medium leading-[1.08] tracking-tight sm:text-7xl lg:text-8xl">
-          Desenvolvendo
-          <br />
-          soluções digitais
-          <span className="text-[var(--color-accent)]">.</span>
-        </h1>
+            <h1 className="mt-8 max-w-4xl font-display text-5xl font-medium leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+              Gabriel Carvalho
+            </h1>
 
-        <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <p className="max-w-lg text-base leading-8 text-[var(--color-muted)] sm:text-lg">
-            Sou desenvolvedor de software e trabalho na construção de aplicações
-            web, APIs e soluções que conectam tecnologia e necessidades reais.
-          </p>
+            <p className="mt-8 max-w-lg text-base leading-8 text-[var(--color-muted)] sm:text-lg">
+              Há 6 anos construindo aplicações seguras e escaláveis.
+            </p>
 
-          <Button href="#projetos" variant="underline">
-            Explorar projetos
-            <ArrowDown size={15} />
-          </Button>
+            <div className="mt-8">
+              <Button href="#projetos" variant="underline">
+                Explorar projetos
+                <ArrowDown size={15} />
+              </Button>
+            </div>
+          </div>
+
+          {/* Fotografia */}
+          <div className="mx-auto w-full max-w-[360px] lg:max-w-[400px]">
+            <div
+              ref={elementRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="magnetic-image relative aspect-square overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)]"
+            >
+              <img
+                src="/images/profile.png"
+                alt="Fotografia de Gabriel"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
         </div>
 
+        {/* Indicador de scroll */}
         <a
           href="#projetos"
           aria-label="Rolar para a seção de projetos"
           className="scroll-indicator absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3 text-[var(--color-muted)] transition-colors hover:text-[var(--color-accent)]"
         >
           <span className="font-mono text-[10px] tracking-[0.2em]">
-            SCROLL TO EXPLORE
+            ROLE PARA EXPLORAR...
           </span>
 
           <span className="mouse-scroll">
@@ -115,24 +129,69 @@ export default function HomePage() {
         </Container>
       </Section>
 
+      {/* Experiência */}
+
+      {/* Experiência */}
       <Section id="experiencia" borderTop>
         <Container className="py-24">
           <SectionHeading
-            eyebrow=">_ 02 / TRAJETÓRIA"
+            eyebrow="02 / TRAJETÓRIA"
             title="Experiência profissional"
           />
 
-          <DividedList>
-            {experiences.map((experience) => (
-              <ExperienceCard
-                key={`${experience.company}-${experience.period}`}
-                period={experience.period}
-                role={experience.role}
-                company={experience.company}
-                description={experience.description}
+          {isLoading ? (
+            <p className="py-12 text-sm text-[var(--color-muted)]">
+              Carregando experiências...
+            </p>
+          ) : isError ? (
+            <div className="py-12">
+              <p className="text-sm text-[var(--color-muted)]">
+                Não foi possível carregar as experiências profissionais.
+              </p>
+
+              <Button
+                variant="underline"
+                onClick={() => void refetch()}
+                className="mt-4"
+              >
+                Tentar novamente
+              </Button>
+            </div>
+          ) : experiences.length === 0 ? (
+            <p className="py-12 text-sm text-[var(--color-muted)]">
+              Nenhuma experiência profissional cadastrada.
+            </p>
+          ) : (
+            <div className="relative">
+              {/* Linha única da timeline */}
+              <div
+                aria-hidden="true"
+                className="absolute bottom-0 left-[216px] top-0 hidden w-px bg-[var(--color-border)] sm:block"
               />
-            ))}
-          </DividedList>
+
+              <DividedList className="relative divide-y-0 border-y-0">
+                {experiences
+                  .slice()
+                  .sort((a, b) => a.displayOrder - b.displayOrder)
+                  .map((experience) => (
+                    <ExperienceCard
+                      key={experience.id}
+                      period={formatExperiencePeriod(
+                        experience.startDate,
+                        experience.endDate,
+                        experience.current,
+                      )}
+                      role={experience.role}
+                      company={experience.company}
+                      description={experience.description}
+                      employmentType={experience.employmentType}
+                      location={experience.location}
+                      technologies={experience.technologies}
+                    />
+                  ))}
+              </DividedList>
+            </div>
+          )}
         </Container>
       </Section>
 

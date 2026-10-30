@@ -9,13 +9,13 @@ export function Footer() {
           <Logo as="span" />
 
           <p className="mt-1 text-xs text-[var(--color-muted)]">
-            Desenvolvido com cuidado.
+            Desenvolvido por Gabriel Carvalho usando React.js + Tailwind
           </p>
         </div>
 
         <div className="flex items-center justify-between gap-6">
           <span className="font-mono text-xs text-[var(--color-muted)]">
-            © {new Date().getFullYear()} Gabriel Henrique
+            © {new Date().getFullYear()} Gabriel Carvalho
           </span>
 
           <a

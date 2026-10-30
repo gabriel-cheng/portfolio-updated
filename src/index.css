@@ -142,6 +142,32 @@ html {
   animation: mouse-scroll-animation 1.4s ease-in-out infinite alternate;
 }
 
+.magnetic-image {
+  transform: perspective(1000px) rotateX(var(--rotate-x, 0deg))
+    rotateY(var(--rotate-y, 0deg));
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 300ms ease;
+
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .magnetic-image:hover {
+    box-shadow: 0 20px 45px rgb(0 0 0 / 12%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magnetic-image {
+    transform: none !important;
+    transition: none;
+  }
+}
+
 @keyframes mouse-scroll-animation {
   from {
     transform: translateY(0);
