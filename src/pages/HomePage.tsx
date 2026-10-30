@@ -76,7 +76,7 @@ export default function HomePage() {
               className="magnetic-image relative aspect-square overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)]"
             >
               <img
-                src="/images/profile.png"
+                src="/images/default-profile.png"
                 alt="Fotografia de Gabriel"
                 className="h-full w-full object-cover"
               />

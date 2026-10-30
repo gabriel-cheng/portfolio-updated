@@ -24,5 +24,4 @@ dist-ssr
 *.sw?
 
 # Files
-/public/images/*.png
 .env
