@@ -136,35 +136,61 @@ export default function HomePage() {
           />
 
           <div className="relative">
-            {/* Linha contínua da timeline */}
-            <div
-              aria-hidden="true"
-              className="absolute bottom-0 left-[216px] top-0 hidden w-px bg-[var(--color-border)] sm:block"
-            />
+            {isLoading ? (
+              <p className="py-10 text-sm text-[var(--color-muted)]">
+                Carregando experiências...
+              </p>
+            ) : isError ? (
+              <div className="py-10">
+                <p className="text-sm text-[var(--color-muted)]">
+                  Não foi possível carregar as experiências profissionais.
+                </p>
 
-            <DividedList className="relative divide-y-0 border-y-0">
-              {companies.map((company) =>
-                company.experiences
-                  .slice()
-                  .sort((a, b) => a.displayOrder - b.displayOrder)
-                  .map((experience) => (
-                    <ExperienceCard
-                      key={experience.id}
-                      company={company.name}
-                      period={formatExperiencePeriod(
-                        experience.startDate,
-                        experience.endDate,
-                        experience.current,
-                      )}
-                      role={experience.role}
-                      description={experience.description}
-                      employmentType={experience.employmentType}
-                      location={experience.location}
-                      technologies={experience.technologies}
-                    />
-                  )),
-              )}
-            </DividedList>
+                <Button
+                  variant="underline"
+                  size="sm"
+                  onClick={() => refetch()}
+                  className="mt-3"
+                >
+                  Tentar novamente
+                </Button>
+              </div>
+            ) : companies.length === 0 ? (
+              <p className="py-10 text-sm text-[var(--color-muted)]">
+                Nenhuma experiência profissional disponível.
+              </p>
+            ) : (
+              <>
+                <div
+                  aria-hidden="true"
+                  className="absolute bottom-0 left-[216px] top-0 hidden w-px bg-[var(--color-border)] sm:block"
+                />
+
+                <DividedList className="relative divide-y-0 border-y-0">
+                  {companies.map((company) =>
+                    company.experiences
+                      .slice()
+                      .sort((a, b) => a.displayOrder - b.displayOrder)
+                      .map((experience) => (
+                        <ExperienceCard
+                          key={experience.id}
+                          company={company.name}
+                          period={formatExperiencePeriod(
+                            experience.startDate,
+                            experience.endDate,
+                            experience.current,
+                          )}
+                          role={experience.role}
+                          description={experience.description}
+                          employmentType={experience.employmentType}
+                          location={experience.location}
+                          technologies={experience.technologies}
+                        />
+                      )),
+                  )}
+                </DividedList>
+              </>
+            )}
           </div>
         </Container>
       </Section>
