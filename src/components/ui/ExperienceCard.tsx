@@ -42,29 +42,24 @@ export function ExperienceCard({
     .slice()
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
-  const periods = orderedExperiences.map((experience) =>
-    formatExperiencePeriod(
-      experience.startDate,
-      experience.endDate,
-      experience.current,
-    ),
+  const earliestStartDate = orderedExperiences
+    .map((experience) => experience.startDate)
+    .sort((a, b) => a.localeCompare(b))[0];
+
+  const hasCurrentExperience = orderedExperiences.some(
+    (experience) => experience.current,
   );
 
-  const companyPeriod =
-    periods.length > 0
-      ? periods.length === 1
-        ? periods[0]
-        : `${orderedExperiences[0].startDate.slice(0, 4)} — ${
-            orderedExperiences.some((experience) => experience.current)
-              ? "Atual"
-              : (orderedExperiences
-                  .map((experience) => experience.endDate)
-                  .filter((date): date is string => date !== null)
-                  .sort()
-                  .at(-1)
-                  ?.slice(0, 4) ?? "")
-          }`
-      : "";
+  const latestEndDate = orderedExperiences
+    .map((experience) => experience.endDate)
+    .filter((date): date is string => date !== null)
+    .sort((a, b) => b.localeCompare(a))[0];
+
+  const companyPeriod = earliestStartDate
+    ? `${earliestStartDate.slice(0, 4)} — ${
+        hasCurrentExperience ? "Atual" : (latestEndDate?.slice(0, 4) ?? "")
+      }`
+    : "";
 
   return (
     <article
