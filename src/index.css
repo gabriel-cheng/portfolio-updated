@@ -1,0 +1,159 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "DM Mono", monospace;
+}
+
+:root {
+  color-scheme: light;
+
+  --color-background: #f5f4ef;
+  --color-surface: #eeede7;
+  --color-foreground: #24241f;
+  --color-muted: #77766f;
+  --color-border: #dad9d1;
+  --color-accent: #947b4b;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-background: #111210;
+  --color-surface: #191a17;
+  --color-foreground: #f1f0ea;
+  --color-muted: #a5a49c;
+  --color-border: #383832;
+  --color-accent: #c6b58a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+/* Cabeçalho fixo com efeito glass */
+.site-header {
+  background-color: color-mix(
+    in srgb,
+    var(--color-background) 82%,
+    transparent
+  );
+
+  border-bottom: 1px solid var(--color-border);
+
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.site-header-menu {
+  background-color: color-mix(
+    in srgb,
+    var(--color-background) 90%,
+    transparent
+  );
+
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Compensa a altura do cabeçalho fixo ao navegar pelas seções */
+html {
+  scroll-padding-top: 5rem;
+}
+
+/* Indicador de rolagem */
+.scroll-indicator svg {
+  animation: scroll-hint 1.8s ease-in-out infinite;
+}
+
+/* Indicador de scroll no formato de mouse */
+.mouse-scroll {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  width: 18px;
+  height: 30px;
+
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
+
+  opacity: 0.75;
+}
+
+.mouse-scroll-dot {
+  position: absolute;
+  top: 5px;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+  background-color: var(--color-accent);
+
+  animation: mouse-scroll-animation 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes mouse-scroll-animation {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mouse-scroll-dot {
+    animation: none;
+  }
+}
