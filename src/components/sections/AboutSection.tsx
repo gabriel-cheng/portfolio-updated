@@ -31,17 +31,17 @@ const defaultParagraphs = [
 const defaultInterests: InterestItem[] = [
   {
     title: "Mood",
-    image: "/images/mood.jpeg",
+    image: "/images/mood.png",
     alt: "Clima perfeito",
   },
   {
     title: "Música",
-    image: "/images/music.jpeg",
+    image: "/images/music.png",
     alt: "Meu momento ouvindo música",
   },
   {
     title: "Academia",
-    image: "/images/gym.jpeg",
+    image: "/images/gym.png",
     alt: "Minha rotina de academia",
   },
   {
@@ -51,7 +51,7 @@ const defaultInterests: InterestItem[] = [
   },
   {
     title: "Amigos",
-    image: "/images/party.jpeg",
+    image: "/images/party.png",
     alt: "Momentos com meus amigos",
   },
 ];
