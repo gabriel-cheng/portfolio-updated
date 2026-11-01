@@ -13,7 +13,6 @@ export interface EducationSectionProps {
   id?: string;
   eyebrow?: string;
   title?: string;
-  description?: string;
   educations?: EducationItem[];
   className?: string;
 }
@@ -22,7 +21,6 @@ export function EducationSection({
   id = "formacao",
   eyebrow = ">_ 03 / FORMAÇÃO",
   title = "Formação acadêmica",
-  description = "Minha base educacional, certificações e diplomas obtidos ao longo da trajetória.",
   educations: propEducations,
   className,
 }: EducationSectionProps) {
@@ -136,12 +134,7 @@ export function EducationSection({
     <>
       <Section id={id} borderTop className={className}>
         <Container className="py-24">
-          <SectionHeading
-            eyebrow={eyebrow}
-            title={title}
-            description={description}
-            layout="stacked"
-          />
+          <SectionHeading eyebrow={eyebrow} title={title} layout="stacked" />
 
           <div className="relative">
             {!isControlled && isLoading ? (
@@ -183,113 +176,115 @@ export function EducationSection({
       </Section>
 
       {/* Lightbox com carrossel para visualização ampliada do diploma */}
-      {selectedDiploma && selectedIndex !== null && selectedDiploma.diplomaImage && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Diploma ampliado"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm animate-in fade-in duration-200"
-          onClick={closeLightbox}
-        >
-          {/* Fechar */}
-          <button
-            type="button"
-            onClick={closeLightbox}
-            aria-label="Fechar visualização"
-            className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
-          >
-            <X size={22} />
-          </button>
-
-          {/* Carrossel */}
+      {selectedDiploma &&
+        selectedIndex !== null &&
+        selectedDiploma.diplomaImage && (
           <div
-            className="relative flex w-full max-w-5xl flex-col items-center gap-5"
-            onClick={(event) => event.stopPropagation()}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Diploma ampliado"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={closeLightbox}
           >
-            {/* Navegação anterior */}
-            {diplomasList.length > 1 && (
-              <button
-                type="button"
-                onClick={showPrevious}
-                aria-label="Diploma anterior"
-                className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-2 text-white transition-colors hover:bg-white/20 sm:-left-12 sm:p-3"
-              >
-                <ChevronLeft size={24} />
-              </button>
-            )}
-
-            {/* Imagem atual */}
-            <div
-              key={selectedDiploma.diplomaImage}
-              className="flex w-full items-center justify-center animate-in fade-in zoom-in-95 duration-200"
+            {/* Fechar */}
+            <button
+              type="button"
+              onClick={closeLightbox}
+              aria-label="Fechar visualização"
+              className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
             >
-              <img
-                src={selectedDiploma.diplomaImage}
-                alt={
-                  selectedDiploma.diplomaAlt ??
-                  `Diploma de ${selectedDiploma.degree} - ${selectedDiploma.institution}`
-                }
-                className="max-h-[75vh] max-w-full rounded-sm object-contain shadow-2xl"
-              />
-            </div>
+              <X size={22} />
+            </button>
 
-            {/* Navegação próxima */}
-            {diplomasList.length > 1 && (
-              <button
-                type="button"
-                onClick={showNext}
-                aria-label="Próximo diploma"
-                className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-2 text-white transition-colors hover:bg-white/20 sm:-right-12 sm:p-3"
+            {/* Carrossel */}
+            <div
+              className="relative flex w-full max-w-5xl flex-col items-center gap-5"
+              onClick={(event) => event.stopPropagation()}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {/* Navegação anterior */}
+              {diplomasList.length > 1 && (
+                <button
+                  type="button"
+                  onClick={showPrevious}
+                  aria-label="Diploma anterior"
+                  className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-2 text-white transition-colors hover:bg-white/20 sm:-left-12 sm:p-3"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+              )}
+
+              {/* Imagem atual */}
+              <div
+                key={selectedDiploma.diplomaImage}
+                className="flex w-full items-center justify-center animate-in fade-in zoom-in-95 duration-200"
               >
-                <ChevronRight size={24} />
-              </button>
-            )}
+                <img
+                  src={selectedDiploma.diplomaImage}
+                  alt={
+                    selectedDiploma.diplomaAlt ??
+                    `Diploma de ${selectedDiploma.degree} - ${selectedDiploma.institution}`
+                  }
+                  className="max-h-[75vh] max-w-full rounded-sm object-contain shadow-2xl"
+                />
+              </div>
 
-            {/* Informações da imagem */}
-            <div className="flex flex-col items-center gap-2 text-white">
-              <p className="font-display text-base font-medium">
-                {selectedDiploma.degree}
-              </p>
-
-              <span className="font-mono text-xs text-white/50">
-                {selectedDiploma.institution} —{" "}
-                {getDiplomaPeriod(selectedDiploma)}
-              </span>
-
+              {/* Navegação próxima */}
               {diplomasList.length > 1 && (
+                <button
+                  type="button"
+                  onClick={showNext}
+                  aria-label="Próximo diploma"
+                  className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-2 text-white transition-colors hover:bg-white/20 sm:-right-12 sm:p-3"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+
+              {/* Informações da imagem */}
+              <div className="flex flex-col items-center gap-2 text-white">
+                <p className="font-display text-base font-medium">
+                  {selectedDiploma.degree}
+                </p>
+
                 <span className="font-mono text-xs text-white/50">
-                  {String(selectedIndex + 1).padStart(2, "0")} /{" "}
-                  {String(diplomasList.length).padStart(2, "0")}
+                  {selectedDiploma.institution} —{" "}
+                  {getDiplomaPeriod(selectedDiploma)}
                 </span>
-              )}
 
-              {/* Indicadores */}
-              {diplomasList.length > 1 && (
-                <div className="mt-1 flex items-center gap-2">
-                  {diplomasList.map((item, index) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setSelectedIndex(index)}
-                      aria-label={`Ir para ${item.degree}`}
-                      aria-current={
-                        selectedIndex === index ? "true" : undefined
-                      }
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        selectedIndex === index
-                          ? "w-6 bg-white"
-                          : "w-1.5 bg-white/30 hover:bg-white/60"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
+                {diplomasList.length > 1 && (
+                  <span className="font-mono text-xs text-white/50">
+                    {String(selectedIndex + 1).padStart(2, "0")} /{" "}
+                    {String(diplomasList.length).padStart(2, "0")}
+                  </span>
+                )}
+
+                {/* Indicadores */}
+                {diplomasList.length > 1 && (
+                  <div className="mt-1 flex items-center gap-2">
+                    {diplomasList.map((item, index) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setSelectedIndex(index)}
+                        aria-label={`Ir para ${item.degree}`}
+                        aria-current={
+                          selectedIndex === index ? "true" : undefined
+                        }
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          selectedIndex === index
+                            ? "w-6 bg-white"
+                            : "w-1.5 bg-white/30 hover:bg-white/60"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </>
   );
 }
