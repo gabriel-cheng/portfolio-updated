@@ -11,6 +11,7 @@ export interface HeroSectionProps {
   title?: string;
   description?: string;
   projectsHref?: string;
+  lookingFor?: string;
   buttonText?: string;
   imageSrc?: string;
   imageAlt?: string;
@@ -19,10 +20,11 @@ export interface HeroSectionProps {
 
 export function HeroSection({
   id = "inicio",
-  badgeText = "Desenvolvedor Full-Stack",
+  badgeText = "Desenvolvedor Full-Stack | Software Engineer",
   title = "Gabriel Carvalho",
   description = "Há 6 anos construindo aplicações seguras e escaláveis.",
   projectsHref = "#projetos",
+  lookingFor = "Software Engineer.",
   buttonText = "Explorar projetos",
   imageSrc = "/images/default-profile.png",
   imageAlt = "Fotografia de Gabriel",
@@ -77,6 +79,10 @@ export function HeroSection({
               className="h-full w-full object-cover"
             />
           </div>
+          <p className="mt-8 max-w-lg text-center leading-8 text-[var(--color-muted)] sm:text-lg">
+            Atualmente, buscando por oportunidades de &nbsp;
+            <span className="text-[var(--color-accent)]">{lookingFor}</span>
+          </p>
         </div>
       </div>
 
@@ -97,4 +103,3 @@ export function HeroSection({
     </Section>
   );
 }
-
