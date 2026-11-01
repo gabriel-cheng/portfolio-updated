@@ -137,7 +137,7 @@ function renderSocialIcon(icon: SocialLinkItem["icon"]) {
 
 export function ContactSection({
   id = "contato",
-  eyebrow = ">_ 04 / CONTATO",
+  eyebrow = ">_ 05 / CONTATO",
   title = "Vamos construir algo interessante?",
   description = "Estou aberto para novas oportunidades em Java, Python e Node.js.",
   socials = defaultSocials,

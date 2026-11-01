@@ -58,7 +58,7 @@ const defaultInterests: InterestItem[] = [
 
 export function AboutSection({
   id = "sobre",
-  eyebrow = ">_ 03 / SOBRE MIM",
+  eyebrow = ">_ 04 / SOBRE MIM",
   title = "Além do código.",
   paragraphs = defaultParagraphs,
   interests = defaultInterests,

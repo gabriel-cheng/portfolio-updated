@@ -1,9 +1,10 @@
 import { Layout } from "../components/layout/Layout";
 import {
+  AboutSection,
   ContactSection,
+  EducationSection,
   ExperienceSection,
   HeroSection,
-  AboutSection,
   ProjectsSection,
 } from "../components/sections";
 
@@ -13,6 +14,7 @@ export default function HomePage() {
       <HeroSection />
       <ProjectsSection />
       <ExperienceSection />
+      <EducationSection />
       <AboutSection />
       <ContactSection />
     </Layout>
