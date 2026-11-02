@@ -24,7 +24,7 @@ export function HeroSection({
   title = "Gabriel Carvalho",
   description = "Há 6 anos construindo aplicações seguras e escaláveis.",
   projectsHref = "#projetos",
-  lookingFor = "Software Engineer.",
+  lookingFor = "Software Engineer",
   buttonText = "Explorar projetos",
   imageSrc = "/images/default-profile.png",
   imageAlt = "Fotografia de Gabriel",
@@ -81,7 +81,7 @@ export function HeroSection({
           </div>
           <p className="mt-8 max-w-lg text-center leading-8 text-[var(--color-muted)] sm:text-lg">
             Atualmente, buscando por oportunidades de &nbsp;
-            <span className="text-[var(--color-accent)]">{lookingFor}</span>
+            <span className="text-[var(--color-accent)]">{lookingFor}</span>.
           </p>
         </div>
       </div>

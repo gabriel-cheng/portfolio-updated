@@ -1,16 +1,13 @@
+import { useProjects } from "../../features/projects/hooks/useProjects";
+import type { Project } from "../../features/projects/types/project";
+import { Button } from "../ui/Button";
 import { Container } from "../ui/Container";
 import { DividedList } from "../ui/DividedList";
 import { ProjectCard } from "../ui/ProjectCard";
 import { Section } from "../ui/Section";
 import { SectionHeading } from "../ui/SectionHeading";
 
-export interface ProjectItem {
-  number: string;
-  title: string;
-  description: string;
-  technologies: string[];
-  href?: string;
-}
+export type ProjectItem = Project;
 
 export interface ProjectsSectionProps {
   id?: string;
@@ -21,31 +18,19 @@ export interface ProjectsSectionProps {
   className?: string;
 }
 
-const defaultProjects: ProjectItem[] = [
-  {
-    number: "01",
-    title: "VaultaPass",
-    description:
-      "Gerenciador de credenciais com foco em segurança, organização e experiência de uso.",
-    technologies: ["Java", "Spring Boot", "React", "PostgreSQL"],
-  },
-  {
-    number: "02",
-    title: "Portfolio CMS",
-    description:
-      "Sistema de gerenciamento de conteúdo para projetos e experiências profissionais.",
-    technologies: ["Java", "Spring Boot", "React", "PostgreSQL"],
-  },
-];
-
 export function ProjectsSection({
   id = "projetos",
   eyebrow = ">_ 01 / TRABALHOS",
   title = "Projetos selecionados",
   description = "Aplicações e soluções desenvolvidas utilizando diferentes tecnologias e abordagens.",
-  projects = defaultProjects,
+  projects: propProjects,
   className,
 }: ProjectsSectionProps) {
+  const { data: apiProjects = [], isLoading, isError, refetch } = useProjects();
+
+  const isControlled = propProjects !== undefined;
+  const projects = isControlled ? propProjects : apiProjects;
+
   return (
     <Section id={id} borderTop className={className}>
       <Container className="py-24">
@@ -56,18 +41,41 @@ export function ProjectsSection({
           layout="split"
         />
 
-        <DividedList>
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.number}
-              number={project.number}
-              title={project.title}
-              description={project.description}
-              technologies={project.technologies}
-              href={project.href}
-            />
-          ))}
-        </DividedList>
+        <div className="relative">
+          {!isControlled && isLoading ? (
+            <p className="py-10 text-sm text-[var(--color-muted)]">
+              Carregando projetos...
+            </p>
+          ) : !isControlled && isError ? (
+            <div className="py-10">
+              <p className="text-sm text-[var(--color-muted)]">
+                Não foi possível carregar os projetos.
+              </p>
+
+              <Button
+                variant="underline"
+                size="sm"
+                onClick={() => refetch()}
+                className="mt-3"
+              >
+                Tentar novamente
+              </Button>
+            </div>
+          ) : projects.length === 0 ? (
+            <p className="py-10 text-sm text-[var(--color-muted)]">
+              Nenhum projeto disponível no momento.
+            </p>
+          ) : (
+            <DividedList>
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id ?? project.number}
+                  {...project}
+                />
+              ))}
+            </DividedList>
+          )}
+        </div>
       </Container>
     </Section>
   );
