@@ -139,7 +139,7 @@ export function ContactSection({
   id = "contato",
   eyebrow = ">_ 05 / CONTATO",
   title = "Vamos construir algo interessante?",
-  description = "Estou aberto para novas oportunidades em Java, Python e Node.js.",
+  description = "Estou aberto para oportunidades de Software Engineering e Software Development.",
   socials = defaultSocials,
   className,
   children,
