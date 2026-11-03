@@ -31,6 +31,21 @@ export function ProjectsSection({
   const isControlled = propProjects !== undefined;
   const projects = isControlled ? propProjects : apiProjects;
 
+  const sortedProjects = [...projects].sort((a, b) => {
+    const numA = parseInt(a.number, 10);
+    const numB = parseInt(b.number, 10);
+
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return numA - numB;
+    }
+
+    return String(a.number ?? "").localeCompare(
+      String(b.number ?? ""),
+      undefined,
+      { numeric: true },
+    );
+  });
+
   return (
     <Section id={id} borderTop className={className}>
       <Container className="py-24">
@@ -61,13 +76,13 @@ export function ProjectsSection({
                 Tentar novamente
               </Button>
             </div>
-          ) : projects.length === 0 ? (
+          ) : sortedProjects.length === 0 ? (
             <p className="py-10 text-sm text-[var(--color-muted)]">
               Nenhum projeto disponível no momento.
             </p>
           ) : (
             <DividedList>
-              {projects.map((project) => (
+              {sortedProjects.map((project) => (
                 <ProjectCard
                   key={project.id ?? project.number}
                   {...project}
